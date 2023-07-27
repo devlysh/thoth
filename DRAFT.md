@@ -29,7 +29,7 @@ $ thoth files backup /path/to/file --archive=lzma --encryption=chachapoly — р
 $ thoth files backup /path/to/file --encryption=aes — робить резервну копію файлу із архівом ZIP та шивруванням AES-256
 $ thoth files backup /path/to/file --archive=lz4 --encryption=aes — поверне помилку, несумісні алгоритми
 
-$ thoth files backup /path/to/file --armor — робить резервну копію файлу і шифрує його (повертає id бекапу)
+$ thoth files backup /path/to/file --armor — робить резервну копію файлу і шифрує його (повертає id бекапу, SHA-256 суму)
 $ thoth files backup /path/to/directуry/ — робить резервну копію директорії (повертає id бекапу)
 
 $ thoth files restore /path/to/file — відновлює резервну копію файлу

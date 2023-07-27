@@ -1,5 +1,5 @@
 import argparse
-from thoth import backup, restore, config
+from thoth import config, files
 from thoth.utils import get_version
 
 
@@ -19,28 +19,29 @@ def main():
     config_parser.add_argument(
         "-e, --encryption", choices=["chachapoly", "aes"], help="Choose encryption method.")
 
-    # Subparser for 'backup' command
-    backup_parser = subparsers.add_parser(
-        "backup", help="Create a backup of the specified file or directory.")
-    backup_parser.add_argument(
-        "path", type=str, help="Path to the file or directory to backup.")
-    backup_parser.add_argument(
-        "--archive", choices=["lzma", "lz4", "zip"], help="Override the default archiving method.")
-    backup_parser.add_argument(
-        "--encryption", choices=["chachapoly", "aes"], help="Override the default encryption method.")
-    backup_parser.add_argument(
+    # Subparser for 'files' command
+    files_parser = subparsers.add_parser(
+        "files", help="Backup or restore files.")
+    files_parser.add_argument("operation", choices=[
+                              "backup", "restore", "list", "cp"], help="Specify the operation.")
+    files_parser.add_argument(
+        "path", type=str, help="Path to the file or directory for operation.")
+    files_parser.add_argument(
+        "--archive", choices=["lzma", "lz4", "zip"], help="Choose archiving method.")
+    files_parser.add_argument(
+        "--encryption", choices=["chachapoly", "aes"], help="Choose encryption method.")
+    files_parser.add_argument(
         "--armor", action="store_true", help="Encrypt the backup.")
-    parser.add_argument('-v, --version', action='version', version=get_version())
-
-    # Subparser for 'restore' command
-    restore_parser = subparsers.add_parser(
-        "restore", help="Restore a backup of the specified file or directory.")
-    restore_parser.add_argument(
-        "path", type=str, help="Path to the file or directory to restore.")
-    restore_parser.add_argument("-i", "--interactive", action="store_true",
-                                help="Interactive mode. Choose which backup version to restore.")
-    restore_parser.add_argument("backup_id", type=str, nargs="?",
-                                help="Specific version of the backup (SHA-256 sum or fragment) to restore. Optional.")
+    files_parser.add_argument(
+        "-i", "--interactive", action="store_true", help="Interactive mode for restore.")
+    files_parser.add_argument(
+        "backup_id", type=str, nargs="?", help="Specific backup ID for some operations.")
+    files_parser.add_argument(
+        "--cron", type=str, help="Set up a cron job for this command.")
+    files_parser.add_argument(
+        "--pack", action="store_true", help="Pack the backup when copying.")
+    files_parser.add_argument(
+        "--unpack", action="store_true", help="Unpack the backup when copying.")
 
     # Parse args
     args = parser.parse_args()
@@ -49,12 +50,8 @@ def main():
     if args.command == "config":
         config.ensure_config_exists()
         config.handle_args(args)
-    elif args.command == "backup":
-        # Assuming you'll have a function like `backup.handle_args(args)` to handle this
-        pass  # Replace with actual logic or function call
-    elif args.command == "restore":
-        # Assuming you'll have a function like `restore.handle_args(args)` to handle this
-        pass  # Replace with actual logic or function call
+    elif args.command == "files":
+        files.handle_args(args)
     else:
         parser.print_help()
 

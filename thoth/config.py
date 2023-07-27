@@ -12,12 +12,14 @@ DEFAULT_CONFIG = {
 ARCHIVE_MAPPING = {
     "1": "lz4",
     "2": "lzma",
-    "3": "zip"
+    "3": "zip",
+    "4": "none"
 }
 
 ENCRYPTION_MAPPING = {
     "1": "chachapoly",
-    "2": "aes"
+    "2": "aes",
+    "3": "none"
 }
 
 
@@ -26,6 +28,17 @@ def save_config(data):
     with open(CONFIG_PATH, 'w') as file:
         for key, value in data.items():
             file.write(f"{key}: {value}\n")
+
+def read_config():
+    """Reads the saved configuration and returns it as a dictionary."""
+    with open(CONFIG_PATH, 'r') as file:
+        lines = file.readlines()
+    config = {}
+    for line in lines:
+        key, value = line.strip().split(': ')
+        config[key] = value
+    return config
+
 
 
 def ensure_config_exists():
@@ -43,14 +56,15 @@ def get_interactive_choices():
     print("1) LZ4           - .lz4 (Default)")
     print("2) LZMA (7-Zip)  - .7z")
     print("3) DEFLATE (ZIP) - .zip")
+    print("4) None          - No compression")
     archive_choice = input("Your choice: ")
 
     selected_archive = ARCHIVE_MAPPING.get(archive_choice, "lz4")
 
     print("\nChoose encryption method:")
     print("1) ChaCha20-Poly1305 (Default)")
-    if selected_archive == "zip":
-        print("2) ZIP AES-256 Encryption")
+    print("2) AES")
+    print("3) None - No encryption")
     encryption_choice = input("Your choice: ")
 
     selected_encryption = ENCRYPTION_MAPPING.get(encryption_choice, "chachapoly")
@@ -66,24 +80,20 @@ def handle_args(args):
     
     # Set defaults based on single provided argument
     if args.archive and not args.encryption:
-        if args.archive in ["lz4", "lzma"]:
+        if args.archive in ["lz4", "lzma", "zip"]:
             args.encryption = "chachapoly"
         else:
-            args.encryption = "chachapoly"
+            args.encryption = "none"
 
     if args.encryption and not args.archive:
-        if args.encryption == "chachapoly":
+        if args.encryption in ["chachapoly", "aes"]:
             args.archive = "lz4"
         else:
-            args.archive = "zip"
+            args.archive = "none"
     
     # Compatibility check
-    if args.archive == "zip" and args.encryption not in ["chachapoly", "aes"]:
-        print("Error: For ZIP format, only ChaCha20-Poly1305 and AES encryption are supported.")
-        return
-
-    if args.archive in ["lz4", "lzma"] and args.encryption != "chachapoly":
-        print(f"Error: For {args.archive.upper()} format, only ChaCha20-Poly1305 encryption is supported.")
+    if args.encryption == "none" and args.archive == "none":
+        print("Error: You must select either compression or encryption or both.")
         return
 
     # Save choices to config

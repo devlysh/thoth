@@ -1,4 +1,12 @@
+cffi==1.15.1
+cryptography==41.0.2
 iniconfig==2.0.0
+lz4==4.3.2
 packaging==23.1
 pluggy==1.2.0
+pycparser==2.21
+pycryptodomex==3.18.0
 pytest==7.4.0
+pyzipper==0.3.6
+-e git+ssh://git@github.com/devlysh/thoth.git@90d2ec911445dcdd1db4e2453d8ce6a4256d57e3#egg=thoth
+tqdm==4.65.0
