@@ -56,7 +56,7 @@ thoth --help
 
 So, go ahead, dive into the code, and make it even better! 🚀
 
-For the details, please check out the [https://github.com/devlysh/thoth/blob/master/LICENCE](full text of the license.)
+> For the details, please check out the [full text of the license.](https://github.com/devlysh/thoth/blob/master/LICENCE)
 
 ### Contributing
 
