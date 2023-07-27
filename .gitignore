@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.egg-info
+*.egg
+
+# Virtual environment
+venv/
+
+# Test-related
+*.pytest_cache/
+
+# OS generated files
+.DS_Store    # For MacOS
+*.swp        # For Vim
+*.swo        # For Vim
+~            # Temporary files often created by text editors
+
+# Development tools
+*.log
+*.sql
+
+# Setup and activate scripts (if you don't want them in your repository)
+# setup.sh
+# activate.sh
+# venv.sh
+
+# Drafts and other documentation (if you don't want them in your repository)
+# DRAFT.md
