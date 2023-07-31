@@ -1,8 +1,5 @@
 import os
-
-# Constants
-CONFIG_DIR = os.path.expanduser("~/.thoth")
-CONFIG_PATH = os.path.join(CONFIG_DIR, "config")
+from .constants import CONFIG_DIR, CONFIG_PATH
 
 DEFAULT_CONFIG = {
     "archive": "lz4",
@@ -29,6 +26,7 @@ def save_config(data):
         for key, value in data.items():
             file.write(f"{key}: {value}\n")
 
+
 def read_config():
     """Reads the saved configuration and returns it as a dictionary."""
     with open(CONFIG_PATH, 'r') as file:
@@ -38,7 +36,6 @@ def read_config():
         key, value = line.strip().split(': ')
         config[key] = value
     return config
-
 
 
 def ensure_config_exists():
@@ -67,8 +64,9 @@ def get_interactive_choices():
     print("3) None - No encryption")
     encryption_choice = input("Your choice: ")
 
-    selected_encryption = ENCRYPTION_MAPPING.get(encryption_choice, "chachapoly")
-    
+    selected_encryption = ENCRYPTION_MAPPING.get(
+        encryption_choice, "chachapoly")
+
     return selected_archive, selected_encryption
 
 
@@ -77,7 +75,7 @@ def handle_args(args):
     # Set defaults if necessary
     if not args.archive and not args.encryption:
         args.archive, args.encryption = get_interactive_choices()
-    
+
     # Set defaults based on single provided argument
     if args.archive and not args.encryption:
         if args.archive in ["lz4", "lzma", "zip"]:
@@ -90,7 +88,7 @@ def handle_args(args):
             args.archive = "lz4"
         else:
             args.archive = "none"
-    
+
     # Compatibility check
     if args.encryption == "none" and args.archive == "none":
         print("Error: You must select either compression or encryption or both.")
